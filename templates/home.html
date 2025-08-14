@@ -1,4 +1,17 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
 {% block content %}
-<h1>Welcome to the Home Page</h1>
+<h2 class="mb-4">Available Tests</h2>
+<div class="row">
+    {% for test in tests %}
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ test.title }}</h5>
+                <a href="{% url 'test_intro' test.id %}" class="btn btn-primary">Start Now</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

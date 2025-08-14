@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Take Test{% endblock %}
+{% block content %}
+<h2>{{ test.title }}</h2>
+
+<div class="alert alert-info">
+    Time remaining: <span id="time-remaining">{{ test.time_limit }}:00</span>
+</div>
+
+<form id="test-form" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+    let timeLimit = {{ test.time_limit }} * 60; // seconds
+    const display = document.getElementById("time-remaining");
+    const form = document.getElementById("test-form");
+
+    function updateTimer() {
+        let minutes = Math.floor(timeLimit / 60);
+        let seconds = timeLimit % 60;
+        display.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        if (timeLimit <= 0) {
+            alert("Time is up! Submitting your test.");
+            form.submit();
+        }
+        timeLimit--;
+    }
+
+    updateTimer(); // initial display
+    setInterval(updateTimer, 1000);
+</script>
+{% endblock %}

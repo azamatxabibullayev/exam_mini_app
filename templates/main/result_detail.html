@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Result Detail{% endblock %}
+{% block content %}
+<h2>{{ result.test.title }} - Result</h2>
+<p><strong>Score:</strong> {{ result.score }}</p>
+<p><strong>Correct:</strong> {{ result.correct_answers }}/{{ result.total_questions }}</p>
+
+<canvas id="detailChart" style="max-width: 250px; max-height: 250px; display: block; margin: 20px auto;"></canvas>
+
+{% with incorrects|length as incorrect_count %}
+{% with result.correct_answers as correct_count %}
+
+<h3 class="mt-4">Correct Answers</h3>
+{% if correct_count > 0 %}
+    <p class="text-success fw-bold">{{ correct_count }} correct answer{{ correct_count|pluralize }}</p>
+{% else %}
+    <p class="text-muted">No correct answers recorded.</p>
+{% endif %}
+
+<h3 class="mt-4">Incorrect Answers</h3>
+{% if incorrect_count > 0 %}
+    {% for wrong in incorrects %}
+    <div class="border rounded p-3 mb-3" style="background-color: #fff3f3;">
+        <p><strong>Question {{ forloop.counter }}:</strong> {{ wrong.question.text }}</p>
+        <p style="color: red;"><strong>Your Answer:</strong> {{ wrong.chosen_choice.text }}</p>
+        <p style="color: green;"><strong>Correct Answer:</strong>
+            {% for choice in wrong.question.choices.all %}
+                {% if choice.is_correct %}{{ choice.text }}{% endif %}
+            {% endfor %}
+        </p>
+    </div>
+    {% endfor %}
+{% else %}
+    <p class="text-success">No incorrect answers 🎉</p>
+{% endif %}
+
+<script>
+    const ctxDetail = document.getElementById('detailChart').getContext('2d');
+    const detailChart = new Chart(ctxDetail, {
+        type: 'pie',
+        data: {
+            labels: ['Correct', 'Incorrect'],
+            datasets: [{
+                data: [{{ correct_count }}, {{ incorrect_count }}],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(255, 99, 132, 0.6)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+
+{% endwith %}
+{% endwith %}
+{% endblock %}

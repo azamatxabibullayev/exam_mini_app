@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Test Introduction{% endblock %}
+{% block content %}
+<h2>{{ test.title }}</h2>
+<p>{{ test.description }}</p>
+<p><strong>Time Limit:</strong> {{ test.time_limit }} minutes</p>
+<p><strong>Questions:</strong> {{ test.question_count }}</p>
+<p><strong>Points per Question:</strong> {{ test.points_per_question }}</p>
+
+{% if not user.is_authenticated %}
+<div class="alert alert-warning">
+    You are not logged in. Your result will not be saved.
+    <a href="{% url 'login' %}" class="alert-link">Login</a> to save your result.
+</div>
+{% endif %}
+
+<a href="{% url 'take_test' test.id %}" class="btn btn-success">Start Test</a>
+{% endblock %}
