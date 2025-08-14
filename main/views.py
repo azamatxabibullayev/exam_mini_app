@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Test, Question, UserTestResult, IncorrectAnswer
 from .forms import TakeTestForm
-from django.utils import timezone
 
 
 def home(request):

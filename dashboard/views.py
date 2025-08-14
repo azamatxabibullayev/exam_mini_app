@@ -30,7 +30,6 @@ def dashboard_home(request):
         .values('day') \
         .annotate(count=Count('id')).order_by('day')
 
-    # fill missing days
     chart_labels = [(last_week + datetime.timedelta(days=i)).strftime('%Y-%m-%d') for i in range(7)]
     chart_data = []
     for label in chart_labels:
@@ -44,12 +43,8 @@ def dashboard_home(request):
 @login_required
 @user_passes_test(is_custom_admin)
 def user_list(request):
-    search = request.GET.get('search', '')
-    users = CustomUser.objects.filter(username__icontains=search)
-    paginator = Paginator(users, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'dashboard/user_list.html', {'page_obj': page_obj, 'search': search})
+    users = CustomUser.objects.all().order_by('full_name')
+    return render(request, 'dashboard/user_list.html', {'users': users})
 
 
 @login_required
@@ -57,7 +52,7 @@ def user_list(request):
 def user_edit(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
     if request.method == 'POST':
-        user.username = request.POST.get('username')
+        user.full_name = request.POST.get('full_name')
         user.email = request.POST.get('email')
         user.is_active = 'is_active' in request.POST
         if request.user.is_superuser:
