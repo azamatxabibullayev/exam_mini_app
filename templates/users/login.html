@@ -1,10 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
-<h2>Login</h2>
-<form method="post" class="card p-3">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+<div class="card shadow-sm p-4 mx-auto" style="max-width: 420px;">
+    <h2 class="text-center mb-4">Login</h2>
+
+    <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-danger w-100 mb-3">
+        <i class="bi bi-google"></i> Continue with Google
+    </a>
+
+    <div class="text-center text-muted mb-3">— or —</div>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+
+    <p class="text-center mt-3">
+        Don't have an account? <a href="{% url 'register' %}">Register here</a>
+    </p>
+</div>
 {% endblock %}
