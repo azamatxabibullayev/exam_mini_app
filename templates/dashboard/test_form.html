@@ -1,0 +1,23 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}{% if test %}Edit{% else %}Create{% endif %} Test{% endblock %}
+{% block content %}
+<h1 class="mb-4">{% if test %}Edit{% else %}Create{% endif %} Test</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" name="title" class="form-control" value="{% if test %}{{ test.title }}{% endif %}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Topic</label>
+        <select name="topic" class="form-select" required>
+            {% for topic in topics %}
+                <option value="{{ topic.id }}" {% if test and test.topic.id==topic.id %}selected{% endif %}>{{ topic.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="btn btn-primary">Save</button>
+    <a href="{% url 'dashboard:test_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

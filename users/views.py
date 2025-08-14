@@ -31,9 +31,15 @@ def login_view(request):
             if user:
                 login(request, user)
                 messages.success(request, "Login successful!")
-                return redirect('home')
+
+                # Redirect based on user type
+                if user.is_superuser or user.is_staff:
+                    return redirect('dashboard:home')  # Dashboard for admins
+                else:
+                    return redirect('home')  # Main app home for normal users
     else:
         form = UserLoginForm()
+
     return render(request, "users/login.html", {"form": form})
 
 

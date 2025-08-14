@@ -1,0 +1,76 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1 class="mb-4">Admin Dashboard</h1>
+
+<div class="row text-center">
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>Total Users</h5>
+                <p class="display-6">{{ stats.total_users }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>Total Topics</h5>
+                <p class="display-6">{{ stats.total_topics }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>Total Tests</h5>
+                <p class="display-6">{{ stats.total_tests }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h3 class="mt-4">Manage Sections</h3>
+<div class="row mt-3">
+    <div class="col-md-4 mb-2">
+        <a href="{% url 'dashboard:user_list' %}" class="btn btn-primary btn-lg w-100">Users</a>
+    </div>
+    <div class="col-md-4 mb-2">
+        <a href="{% url 'dashboard:topic_list' %}" class="btn btn-secondary btn-lg w-100">Topics</a>
+    </div>
+    <div class="col-md-4 mb-2">
+        <a href="{% url 'dashboard:test_list' %}" class="btn btn-warning btn-lg w-100">Tests</a>
+    </div>
+</div>
+
+<hr>
+
+<h3 class="mt-4">User Growth (Last 7 Days)</h3>
+<canvas id="userChart" height="100"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('userChart').getContext('2d');
+const userChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Users Registered',
+            data: {{ chart_data|safe }},
+            borderColor: 'rgba(75, 192, 192, 1)',
+            tension: 0.4,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Delete Test{% endblock %}
+{% block content %}
+<h1 class="mb-4">Delete Test</h1>
+<p>Are you sure you want to delete <strong>{{ test.title }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'dashboard:test_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

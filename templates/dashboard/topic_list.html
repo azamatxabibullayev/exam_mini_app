@@ -1,0 +1,60 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Topics{% endblock %}
+{% block content %}
+<h1 class="mb-4">Topics</h1>
+
+<form method="get" class="mb-3 d-flex">
+    <input type="text" name="search" class="form-control me-2" placeholder="Search topics..." value="{{ search }}">
+    <button class="btn btn-primary">Search</button>
+</form>
+
+<a href="{% url 'dashboard:topic_create' %}" class="btn btn-success mb-3">Add Topic</a>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for topic in page_obj %}
+        <tr>
+            <td>{{ topic.id }}</td>
+            <td>{{ topic.name }}</td>
+            <td>
+                <a href="{% url 'dashboard:topic_edit' topic.id %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'dashboard:topic_delete' topic.id %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="3" class="text-center">No topics found.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}">Previous</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+      <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+        <a class="page-link" href="?page={{ num }}&search={{ search }}">{{ num }}</a>
+      </li>
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}">Next</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Next</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}
